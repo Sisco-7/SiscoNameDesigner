@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sisco Name Designer</title>
+    <!-- Import Google Fonts for better Unicode support -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&family=Noto+Serif&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a, #2a1a3a);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .container {
+            background: #2a2a2a;
+            border-radius: 20px;
+            padding: 15px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 0 30px rgba(187, 134, 252, 0.3);
+            border: 1px solid #bb86fc;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 15px;
+            color: #bb86fc;
+            text-shadow: 0 0 15px rgba(187, 134, 252, 0.7);
+            letter-spacing: 2px;
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input, select, button {
+            padding: 8px;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 8px;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+            width: 100%; /* Ensure elements fit within the container */
+        }
+
+        input {
+            background: #3a3a3a;
+            color: #fff;
+            border: 1px solid #bb86fc;
+            box-shadow: inset 0 0 5px rgba(187, 134, 252, 0.2);
+        }
+
+        input::placeholder {
+            color: #888;
+        }
+
+        select {
+            background: #3a3a3a;
+            color: #fff;
+            border: 1px solid #bb86fc;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%23bb86fc" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 30px;
+            box-shadow: 0 0 10px rgba(187, 134, 252, 0.2);
+        }
+
+        select:hover, input:hover {
+            background: #4a4a4a;
+        }
+
+        button {
+            background: linear-gradient(45deg, #bb86fc, #6200ea);
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(187, 134, 252, 0.3);
+        }
+
+        button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(187, 134, 252, 0.5);
+        }
+
+        .preview {
+            text-align: center;
+            margin: 10px 0;
+            font-size: 1.1rem;
+            color: #bb86fc;
+            text-shadow: 0 0 5px rgba(187, 134, 252, 0.3);
+            min-height: 30px;
+            background: rgba(187, 134, 252, 0.1);
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid rgba(187, 134, 252, 0.3);
+            font-family: 'Noto Serif', serif; /* Ensure font support */
+        }
+
+        #designed-names {
+            list-style: none;
+            padding: 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .name-item {
+            background: #3a3a3a;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s, background 0.3s;
+            border: 1px solid rgba(187, 134, 252, 0.2);
+        }
+
+        .name-item:hover {
+            transform: translateY(-3px);
+            background: #4a4a4a;
+            border-color: #bb86fc;
+        }
+
+        .name-text {
+            font-size: 1rem;
+            color: #fff;
+            text-shadow: 0 0 5px rgba(187, 134, 252, 0.3);
+            font-family: 'Noto Serif', serif; /* Ensure font support */
+        }
+
+        .actions button {
+            background: none;
+            border: none;
+            color: #bb86fc;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: color 0.3s;
+        }
+
+        .actions button:hover {
+            color: #fff;
+        }
+
+        .copied {
+            animation: copiedAnimation 0.5s ease;
+        }
+
+        @keyframes copiedAnimation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .clear-favorites {
+            margin-top: 10px;
+            background: #ff4444;
+            width: 100%;
+        }
+
+        .clear-favorites:hover {
+            background: #cc0000;
+            box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+        }
+
+        .credit {
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: #888;
+            text-align: center;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #bb86fc;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(187, 134, 252, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 600px;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .input-section {
+                flex-direction: row;
+                justify-content: center;
+                gap: 15px;
+            }
+
+            input, select, button {
+                padding: 10px;
+                font-size: 1rem;
+            }
+
+            .name-text {
+                font-size: 1.1rem;
+            }
+
+            #designed-names {
+                max-height: 400px;
+            }
+
+            .credit {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+                max-width: 100%;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            input, select, button {
+                font-size: 0.8rem;
+                padding: 6px;
+            }
+
+            .name-text {
+                font-size: 0.9rem;
+            }
+
+            .credit {
+                font-size: 0.7rem;
+            }
+
+            .preview {
+                font-size: 1rem;
+                padding: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sisco Name Designer</h1>
+        <div class="input-section">
+            <input type="text" id="user-name" placeholder="Enter your name" required>
+            <select id="theme">
+                <option value="gothic">Gothic (𝔊𝔬𝔱𝔥𝔦𝔠)</option>
+                <option value="script">Script (𝒮𝒸𝓇𝒾𝓅𝓉)</option>
+                <option value="circled">Circled (ⒸⒾⓇⒸⓁⒺⒹ)</option>
+                <option value="squared">Squared (🆂🆀🆄🅰🆁🅴🅳)</option>
+                <option value="doubleStruck">Double Struck (𝔻𝕠𝕦𝕓𝕝𝕖 𝕊𝕥𝕣𝕦𝕔𝕜)</option>
+                <option value="fraktur">Fraktur (𝖋𝖗𝖆𝖐𝖙𝖚𝖗)</option>
+                <option value="boldFraktur">Bold Fraktur (𝓕𝓻𝓪𝓴𝓽𝓾𝓻)</option>
+                <option value="monospace">Monospace (𝙼𝚘𝚗𝚘𝚜𝚙𝚊𝚌𝚎)</option>
+                <option value="smallCaps">Small Caps (ꜱᴍᴀʟʟ ᴄᴀᴘꜱ)</option>
+            </select>
+            <button id="design-btn">Design Name</button>
+        </div>
+        <div class="preview" id="preview"></div>
+        <ul id="designed-names"></ul>
+        <button class="clear-favorites" id="clear-favorites">Clear Favorites</button>
+        <p class="credit">Sisco Name Designer was created by Sisco Ask, a creative web developer passionate about building unique and engaging web experiences.</p>
+    </div>
+    <div class="toast" id="toast">Name Copied!</div>
+
+    <script>
+        // Font styles with special characters
+        const fontStyles = {
+            gothic: {
+                chars: "𝔄𝔅𝔆𝔇𝔈𝔉𝔊𝔋𝔌𝔍𝔎𝔏𝔐𝔑𝔒𝔓𝔔𝔕𝔖𝔗𝔘𝔙𝔚𝔛𝔜𝔝𝔞𝔟𝔠𝔡𝔢𝔣𝔤𝔥𝔦𝔧𝔨𝔩𝔪𝔫𝔬𝔭𝔮𝔯𝔰𝔱𝔲𝔳𝔴𝔵𝔶𝔷",
+                decorations: ["♰{name}♰", "🖤{name}🖤", "✞{name}✞", "🕸️{name}🕸️", "☠{name}☠"]
+            },
+            script: {
+                chars: "𝒜𝐵𝒞𝒟𝐸𝐹𝒢𝐻𝐼𝒥𝐾𝐿𝑀𝒩𝒪𝒫𝒬𝑅𝒮𝒯𝒰𝒱𝒲𝒳𝒴𝒵𝒶𝒷𝒸𝒹𝑒𝒻𝑔𝒽𝒾𝒿𝓀𝓁𝓂𝓃𝓄𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏",
+                decorations: ["✍{name}✍", "🖋️{name}🖋️", "📜{name}📜", "✒{name}✒", "🪶{name}🪶"]
+            },
+            circled: {
+                chars: "ⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩ",
+                decorations: ["🔵{name}🔵", "⚪{name}⚪", "🟣{name}🟣", "⭕{name}⭕", "🔴{name}🔴"]
+            },
+            squared: {
+                chars: "🅰🅱🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🅾🅿🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉🅰🅱🅲🅳🅴🅵🅶🅷🅸🅹🅺🅻🅼🅽🅾🅿🆀🆁🆂🆃🆄🆅🆆🆇🆈🆉",
+                decorations: ["🟦{name}🟦", "🟥{name}🟥", "🟪{name}🟪", "⬜{name}⬜", "⬛{name}⬛"]
+            },
+            doubleStruck: {
+                chars: "𝔸𝔹ℂ𝔻𝔼𝔽𝔾ℍ𝕀𝕁𝕂𝕃𝕄ℕ𝕆ℙℚℝ𝕊𝕋𝕌𝕍𝕎𝕏𝕐𝕑𝕒𝕓𝕔𝕕𝕖𝕗𝕘𝕙𝕚𝕛𝕜𝕝𝕞𝕟𝕠𝕡𝕢𝕣𝕤𝕥𝕦𝕧𝕨𝕩𝕪𝕫",
+                decorations: ["✦{name}✦", "✧{name}✧", "🖼️{name}🖼️", "📐{name}📐", "🕴️{name}🕴️"]
+            },
+            fraktur: {
+                chars: "𝔄𝔅𝔆𝔇𝔈𝔉𝔊𝔋𝔌𝔍𝔎𝔏𝔐𝔑𝔒𝔓𝔔𝔕𝔖𝔗𝔘𝔙𝔚𝔛𝔜𝔝𝔞𝔟𝔠𝔡𝔢𝔣𝔤𝔥𝔦𝔧𝔨𝔩𝔪𝔫𝔬𝔭𝔮𝔯𝔰𝔱𝔲𝔳𝔴𝔵𝔶𝔷",
+                decorations: ["🖌️{name}🖌️", "🖼️{name}🖼️", "✠{name}✠", "🕍{name}🕍", "🗡️{name}🗡️"]
+            },
+            boldFraktur: {
+                chars: "𝕬𝕭𝕮𝕯𝕰𝕱𝕲𝕳𝕴𝕵𝕶𝕷𝕸𝕹𝕺𝕻𝕼𝕽𝕾𝕿𝖀𝖁𝖂𝖃𝖄𝖅𝖆𝖇𝖈𝖉𝖊𝖋𝖌𝖍𝖎𝖏𝖐𝖑𝖒𝖓𝖔𝖕𝖖𝖗𝖘𝖙𝖚𝖛𝖜𝖝𝖞𝖟",
+                decorations: ["⚔️{name}⚔️", "🛡️{name}🛡️", "🗿{name}🗿", "🪓{name}🪓", "🗝️{name}🗝️"]
+            },
+            monospace: {
+                chars: "𝙰𝙱𝙲𝙳𝙴𝙵𝙶𝙷𝙸𝙹𝙺𝙻𝙼𝙽𝙾𝙿𝚀𝚁𝚂𝚃𝚄𝚅𝚆𝚇𝚈𝚉𝚊𝚋𝚌𝚍𝚎𝚏𝚐𝚑𝚒𝚓𝚔𝚕𝚖𝚗𝚘𝚙𝚚𝚛𝚜𝚝𝚞𝚟𝚠𝚡𝚢𝚣",
+                decorations: ["⌨️{name}⌨️", "💾{name}💾", "🖥️{name}🖥️", "📟{name}📟", "🖨️{name}🖨️"]
+            },
+            smallCaps: {
+                chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘQʀꜱᴛᴜᴠᴡxʏᴢ",
+                decorations: ["🪄{name}🪄", "✨{name}✨", "🌟{name}🌟", "💫{name}💫", "🪅{name}🪅"]
+            }
+        };
+
+        // Function to convert name to special font-like characters
+        function toSpecialFont(name, style) {
+            const normal = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            const specialChars = fontStyles[style].chars;
+            let result = "";
+            for (let char of name) {
+                const index = normal.indexOf(char);
+                if (index !== -1) {
+                    result += specialChars[index];
+                } else {
+                    result += char; // Keep non-alphabetic characters unchanged
+                }
+            }
+            return result;
+        }
+
+        // Get DOM elements
+        const designBtn = document.getElementById("design-btn");
+        const userNameInput = document.getElementById("user-name");
+        const themeSelect = document.getElementById("theme");
+        const designedNamesList = document.getElementById("designed-names");
+        const previewDiv = document.getElementById("preview");
+        const clearFavoritesBtn = document.getElementById("clear-favorites");
+        const toast = document.getElementById("toast");
+
+        // Load favorites from localStorage
+        let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+        // Function to design the name with all decorations in the selected theme
+        function designName(name, theme) {
+            if (!name.trim()) {
+                alert("Please enter a name!");
+                return [];
+            }
+            const style = fontStyles[theme];
+            const decorations = style.decorations;
+            const designedNames = [];
+
+            // Convert the name to the selected font style
+            const styledName = toSpecialFont(name, theme);
+
+            // Apply decorations to the styled name
+            decorations.forEach(decoration => {
+                designedNames.push(decoration.replace("{name}", styledName));
+            });
+
+            return designedNames;
+        }
+
+        // Function to render a designed name
+        function renderDesignedName(designedName) {
+            const li = document.createElement("li");
+            li.classList.add("name-item", "fade-in");
+
+            li.innerHTML = `
+                <span class="name-text">${designedName}</span>
+                <div class="actions">
+                    <button class="copy-btn" title="Copy">📋</button>
+                    <button class="favorite-btn" title="Favorite">❤️</button>
+                    <button class="share-btn" title="Share">📤</button>
+                </div>
+            `;
+
+            // Copy to clipboard with notification
+            li.querySelector(".copy-btn").addEventListener("click", () => {
+                navigator.clipboard.writeText(designedName);
+                li.classList.add("copied");
+                toast.classList.add("show");
+                setTimeout(() => toast.classList.remove("show"), 2000);
+            });
+
+            // Add to favorites
+            li.querySelector(".favorite-btn").addEventListener("click", () => {
+                if (!favorites.includes(designedName)) {
+                    favorites.push(designedName);
+                    localStorage.setItem("favorites", JSON.stringify(favorites));
+                    alert("Added to favorites!");
+                    renderFavorites();
+                }
+            });
+
+            // Share the designed name
+            li.querySelector(".share-btn").addEventListener("click", () => {
+                if (navigator.share) {
+                    navigator.share({
+                        title: "Check out my designed name!",
+                        text: designedName,
+                    }).catch(err => console.log("Share failed:", err));
+                } else {
+                    alert("Share feature not supported on this browser. You can copy the name instead!");
+                }
+            });
+
+            designedNamesList.appendChild(li);
+        }
+
+        // Function to render favorites
+        function renderFavorites() {
+            const favoriteItems = designedNamesList.querySelectorAll(".name-item.favorite");
+            favoriteItems.forEach(item => item.remove());
+            favorites.forEach(designedName => {
+                const li = document.createElement("li");
+                li.classList.add("name-item", "favorite", "fade-in");
+
+                li.innerHTML = `
+                    <span class="name-text">${designedName}</span>
+                    <div class="actions">
+                        <button class="copy-btn" title="Copy">📋</button>
+                        <button class="share-btn" title="Share">📤</button>
+                    </div>
+                `;
+
+                li.querySelector(".copy-btn").addEventListener("click", () => {
+                    navigator.clipboard.writeText(designedName);
+                    li.classList.add("copied");
+                    toast.classList.add("show");
+                    setTimeout(() => toast.classList.remove("show"), 2000);
+                });
+
+                li.querySelector(".share-btn").addEventListener("click", () => {
+                    if (navigator.share) {
+                        navigator.share({
+                            title: "Check out my designed name!",
+                            text: designedName,
+                        }).catch(err => console.log("Share failed:", err));
+                    } else {
+                        alert("Share feature not supported on this browser. You can copy the name instead!");
+                    }
+                });
+
+                designedNamesList.prepend(li);
+            });
+        }
+
+        // Live preview as the user types
+        userNameInput.addEventListener("input", () => {
+            const name = userNameInput.value;
+            const theme = themeSelect.value;
+            if (name.trim()) {
+                const style = fontStyles[theme];
+                const previewDecoration = style.decorations[0];
+                const styledName = toSpecialFont(name, theme);
+                previewDiv.textContent = previewDecoration.replace("{name}", styledName);
+            } else {
+                previewDiv.textContent = "";
+            }
+        });
+
+        // Design the name on button click
+        designBtn.addEventListener("click", () => {
+            const name = userNameInput.value;
+            const theme = themeSelect.value;
+            const designedNames = designName(name, theme);
+
+            // Clear previous non-favorite designs
+            const nonFavoriteItems = designedNamesList.querySelectorAll(".name-item:not(.favorite)");
+            nonFavoriteItems.forEach(item => item.remove());
+
+            // Render new designs
+            designedNames.forEach(designedName => renderDesignedName(designedName));
+        });
+
+        // Clear favorites
+        clearFavoritesBtn.addEventListener("click", () => {
+            if (confirm("Are you sure you want to clear all favorites?")) {
+                favorites = [];
+                localStorage.setItem("favorites", JSON.stringify(favorites));
+                renderFavorites();
+            }
+        });
+
+        // Initial render of favorites
+        renderFavorites();
+
+        // Trigger design on Enter key press
+        userNameInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                designBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>
