@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sisco Name Designer</title>
+    <!-- Link to the Web App Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <!-- Set theme color for the browser -->
+    <meta name="theme-color" content="#bb86fc">
+    <!-- Make it a standalone app when installed -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <!-- Import Font Awesome for social media icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -259,6 +266,25 @@
             opacity: 1;
         }
 
+        /* Install Button */
+        .install-section {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .install-btn {
+            background: linear-gradient(45deg, #ff6f61, #ff4081);
+            padding: 10px;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(255, 111, 97, 0.3);
+        }
+
+        .install-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(255, 111, 97, 0.5);
+        }
+
         /* Responsive Design */
         @media (min-width: 768px) {
             .container {
@@ -359,6 +385,9 @@
             <textarea id="suggestion-input" placeholder="Share your feedback here..."></textarea>
             <button id="submit-suggestion">Submit</button>
         </div>
+        <div class="install-section">
+            <button class="install-btn" id="install-btn" style="display: none;">Install Sisco Name Designer</button>
+        </div>
         <p class="credit">Sisco Name Designer was created by Sisco Ask, a creative web developer passionate about building unique and engaging web experiences.</p>
         <div class="social-links">
             <p>Follow us for more creative inventions!</p>
@@ -444,7 +473,7 @@
                 transform: (char) => {
                     const boldMap = {
                         'a': '𝐚', 'b': '𝐛', 'c': '𝐜', 'd': '𝐝', 'e': '𝐞', 'f': '𝐟', 'g': '𝐠', 'h': '𝐡', 'i': '𝐢', 'j': '𝐣',
-                        'k': '𝐤', 'l': '𝐥', 'm': '𝐦', 'n': '𝐧', 'o': '𝐨', 'p': '𝐩', 'q': '𝐪', 'r': '𝐫', 's': '𝐬', 't': '𝐭',
+                        'k': '𝐀', 'l': '𝐥', 'm': '𝐦', 'n': '𝐧', 'o': '𝐨', 'p': '𝐩', 'q': '𝐪', 'r': '𝐫', 's': '𝐬', 't': '𝐭',
                         'u': '𝐮', 'v': '𝐯', 'w': '𝐰', 'x': '𝐱', 'y': '𝐲', 'z': '𝐳',
                         'A': '𝐀', 'B': '𝐁', 'C': '𝐂', 'D': '𝐃', 'E': '𝐄', 'F': '𝐅', 'G': '𝐆', 'H': '𝐇', 'I': '𝐈', 'J': '𝐉',
                         'K': '𝐊', 'L': '𝐋', 'M': '𝐌', 'N': '𝐍', 'O': '𝐎', 'P': '𝐏', 'Q': '𝐐', 'R': '𝐑', 'S': '𝐒', 'T': '𝐓',
@@ -490,7 +519,7 @@
                         'a': '𝖺', 'b': '𝖻', 'c': '𝖼', 'd': '𝖽', 'e': '𝖾', 'f': '𝖿', 'g': '𝗀', 'h': '𝗁', 'i': '𝗂', 'j': '𝗃',
                         'k': '𝗄', 'l': '𝗅', 'm': '𝗆', 'n': '𝗇', 'o': '𝗈', 'p': '𝗉', 'q': '𝗊', 'r': '𝗋', 's': '𝗌', 't': '𝗍',
                         'u': '𝗎', 'v': '𝗏', 'w': '𝗐', 'x': '𝗑', 'y': '𝗒', 'z': '𝗓',
-                    'A': '𝖠', 'B': '𝖡', 'C': '𝖢', 'D': '𝖣', 'E': '𝖤', 'F': '𝖥', 'G': '𝖦', 'H': '𝖧', 'I': '𝖨', 'J': '𝖩',
+                        'A': '𝖠', 'B': '𝖡', 'C': '𝖢', 'D': '𝖣', 'E': '𝖤', 'F': '𝖥', 'G': '𝖦', 'H': '𝖧', 'I': '𝖨', 'J': '𝖩',
                         'K': '𝖪', 'L': '𝖫', 'M': '𝖬', 'N': '𝖭', 'O': '𝖮', 'P': '𝖯', 'Q': '𝖰', 'R': '𝖱', 'S': '𝖲', 'T': '𝖳',
                         'U': '𝖴', 'V': '𝖵', 'W': '𝖶', 'X': '𝖷', 'Y': '𝖸', 'Z': '𝖹'
                     };
@@ -589,6 +618,7 @@
         const toast = document.getElementById("toast");
         const suggestionInput = document.getElementById("suggestion-input");
         const submitSuggestionBtn = document.getElementById("submit-suggestion");
+        const installBtn = document.getElementById("install-btn");
 
         // Load favorites from localStorage
         let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
@@ -742,8 +772,8 @@
                 return;
             }
 
-            // Replace with your WhatsApp number (in international format, e.g., +1234567890)
-            const whatsappNumber = "1234567890"; // Replace with your actual number
+            // Use the WhatsApp number from the link
+            const whatsappNumber = "+2348128197651";
             const message = encodeURIComponent(`Suggestion/Complaint for Sisco Name Designer: ${suggestion}`);
             const whatsappUrl = `https://wa.me/+2348128197651?text=${message}`;
 
@@ -764,6 +794,53 @@
                 designBtn.click();
             }
         });
+
+        // Register the service worker for offline support
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+
+        // Handle PWA installation prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the default mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Store the event so it can be triggered later
+            deferredPrompt = e;
+            // Show the install button
+            installBtn.style.display = 'block';
+
+            installBtn.addEventListener('click', () => {
+                // Show the install prompt
+                deferredPrompt.prompt();
+                // Wait for the user to respond to the prompt
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    } else {
+                        console.log('User dismissed the install prompt');
+                    }
+                    // Clear the deferred prompt
+                    deferredPrompt = null;
+                    // Hide the install button
+                    installBtn.style.display = 'none';
+                });
+            });
+        });
+
+        // Hide the install button if the app is already installed
+        window.addEventListener('appinstalled', () => {
+            installBtn.style.display = 'none';
+        });
+        navigator.serviceWorker.register('/sw.js')
     </script>
 </body>
 </html>
